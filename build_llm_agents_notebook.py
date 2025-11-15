@@ -1,9 +1,41 @@
-{
- "cells": [
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
+#!/usr/bin/env python3
+"""
+Script para construir el notebook refactorizado 01-intro-llm-agents.ipynb
+con el template híbrido completo.
+"""
+
+import json
+from datetime import datetime
+
+def create_cell(cell_type, content, metadata=None):
+    """Helper para crear una celda de notebook."""
+    cell = {
+        "cell_type": cell_type,
+        "metadata": metadata or {},
+        "source": content if isinstance(content, list) else [content]
+    }
+
+    if cell_type == "code":
+        cell["execution_count"] = None
+        cell["outputs"] = []
+
+    return cell
+
+def markdown_cell(content):
+    """Crea una celda markdown."""
+    return create_cell("markdown", content)
+
+def code_cell(content):
+    """Crea una celda de código."""
+    return create_cell("code", content)
+
+# Iniciar construcción del notebook
+cells = []
+
+# ========================================
+# HEADER CON TOC COMPLETO
+# ========================================
+cells.append(markdown_cell([
     "# 01. Introducción a LLM Agents\n",
     "\n",
     "**Nivel:** 🟢 Principiante  \n",
@@ -36,13 +68,13 @@
     "10. [📍 Navegación y Próximos Pasos](#10-navegacion)\n",
     "\n",
     "---\n"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "<a id=\"1-motivacion\"></a>\n",
+]))
+
+# ========================================
+# SECCIÓN 1: MOTIVACIÓN
+# ========================================
+cells.append(markdown_cell([
+    '<a id="1-motivacion"></a>\n',
     "## 1. Motivación: ¿Por qué Agentes?\n",
     "\n",
     "### El Problema con LLMs Puros\n",
@@ -71,13 +103,13 @@
     "\n",
     "**Al final de este notebook responderemos:**\n",
     "*¿Cómo podemos transformar un LLM pasivo (solo genera texto) en un agente activo (razona y ejecuta acciones)?*\n"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "<a id=\"2-intuicion-visual\"></a>\n",
+]))
+
+# ========================================
+# SECCIÓN 2: INTUICIÓN VISUAL
+# ========================================
+cells.append(markdown_cell([
+    '<a id="2-intuicion-visual"></a>\n',
     "## 2. Intuición Visual: Anatomía de un Agente\n",
     "\n",
     "### LLM vs Agente: Comparación\n",
@@ -129,26 +161,21 @@
     "5. **Planner** (opcional): Descompone tareas complejas en pasos\n",
     "\n",
     "Visualizaremos esto con código a continuación.\n"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "metadata": {},
-   "source": [
+]))
+
+# ========================================
+# SETUP
+# ========================================
+cells.append(code_cell([
     "# Instalación de dependencias necesarias\n",
     "# Descomenta si no las tienes instaladas\n",
     "\n",
     "# !pip install openai anthropic python-dotenv plotly pandas\n",
     "# Para modelos locales (opcional):\n",
     "# !pip install transformers torch\n"
-   ],
-   "execution_count": null,
-   "outputs": []
-  },
-  {
-   "cell_type": "code",
-   "metadata": {},
-   "source": [
+]))
+
+cells.append(code_cell([
     "import os\n",
     "import json\n",
     "from typing import List, Dict, Optional, Callable\n",
@@ -179,15 +206,13 @@
     "load_dotenv()\n",
     "\n",
     "print(\"✅ Librerías importadas correctamente\")\n"
-   ],
-   "execution_count": null,
-   "outputs": []
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "<a id=\"3-fundamentos-matematicos\"></a>\n",
+]))
+
+# ========================================
+# SECCIÓN 3: FUNDAMENTOS MATEMÁTICOS
+# ========================================
+cells.append(markdown_cell([
+    '<a id="3-fundamentos-matematicos"></a>\n',
     "## 3. Fundamentos Matemáticos: Formalización del Agente\n",
     "\n",
     "### Definición Formal\n",
@@ -250,25 +275,22 @@
     "**Paso 4:** LLM genera respuesta final → \"El 15% de 340 es 51\"\n",
     "\n",
     "Este loop puede iterar múltiples veces según la complejidad de la tarea.\n"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "<a id=\"4-implementacion-desde-cero\"></a>\n",
+]))
+
+# ========================================
+# SECCIÓN 4: IMPLEMENTACIÓN DESDE CERO
+# ========================================
+cells.append(markdown_cell([
+    '<a id="4-implementacion-desde-cero"></a>\n',
     "## 4. Implementación Desde Cero: Simple Agent Loop\n",
     "\n",
     "Implementaremos un agente básico con tres componentes:\n",
     "1. **LLM Backend** (OpenAI, Anthropic, o simulado)\n",
     "2. **Herramientas simples** (calculadora, hora actual)\n",
     "3. **Loop de control**\n"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "metadata": {},
-   "source": [
+]))
+
+cells.append(code_cell([
     "@dataclass\n",
     "class AgentAction:\n",
     "    \"\"\"Representa una acción del agente\"\"\"\n",
@@ -322,14 +344,10 @@
     ")\n",
     "\n",
     "print(\"✅ Herramientas creadas:\", [calculator_tool.name, time_tool.name])\n"
-   ],
-   "execution_count": null,
-   "outputs": []
-  },
-  {
-   "cell_type": "code",
-   "metadata": {},
-   "source": [
+]))
+
+# Clase SimpleAgent (larga)
+cells.append(code_cell([
     "class SimpleAgent:\n",
     "    \"\"\"\n",
     "    Implementación básica de un agente LLM.\n",
@@ -534,21 +552,12 @@
     "        return final_response\n",
     "\n",
     "print(\"✅ Clase SimpleAgent implementada\")\n"
-   ],
-   "execution_count": null,
-   "outputs": []
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "### Probemos nuestro agente\n"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "metadata": {},
-   "source": [
+]))
+
+# Demos
+cells.append(markdown_cell(["### Probemos nuestro agente\n"]))
+
+cells.append(code_cell([
     "# Crear agente con herramientas\n",
     "agent = SimpleAgent(\n",
     "    tools=[calculator_tool, time_tool],\n",
@@ -559,27 +568,24 @@
     "result1 = agent.run(\"¿Cuánto es el 15% de 340?\")\n",
     "print(f\"\\n{'='*60}\")\n",
     "print(f\"Resultado Final: {result1}\")\n"
-   ],
-   "execution_count": null,
-   "outputs": []
-  },
-  {
-   "cell_type": "code",
-   "metadata": {},
-   "source": [
+]))
+
+cells.append(code_cell([
     "# Probar con pregunta de tiempo\n",
     "result2 = agent.run(\"¿Qué hora es?\")\n",
     "print(f\"\\n{'='*60}\")\n",
     "print(f\"Resultado Final: {result2}\")\n"
-   ],
-   "execution_count": null,
-   "outputs": []
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "<a id=\"5-ejercicios-graded\"></a>\n",
+]))
+
+print("Construyendo secciones 1-4... OK")
+
+# ========================================
+# SECCIÓN 5: EJERCICIOS GRADED
+# ========================================
+print("Construyendo sección 5: Ejercicios GRADED...")
+
+cells.append(markdown_cell([
+    '<a id="5-ejercicios-graded"></a>\n',
     "## 5. 🎓 Ejercicios Prácticos Guiados (100 pts)\n",
     "\n",
     "En esta sección implementarás las funciones core de un sistema agéntico desde cero. Cada ejercicio construye sobre el anterior, llevándote desde parsear respuestas básicas hasta implementar un agente completo con memoria.\n",
@@ -614,12 +620,10 @@
     "- Si fallas un test, el mensaje de error te dará pistas\n",
     "\n",
     "---\n"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "metadata": {},
-   "source": [
+]))
+
+# Importar autograder
+cells.append(code_cell([
     "# Importar el sistema de autograding\n",
     "import sys\n",
     "sys.path.append('/home/user/TUTORIALS-AI-AGENTS/rutas/03-llm-agents')\n",
@@ -635,14 +639,10 @@
     "print(f\"\\n📝 Ejercicios:\")\n",
     "for name, points in grader.exercise_points.items():\n",
     "    print(f\"  - {name}: {points} pts\")\n"
-   ],
-   "execution_count": null,
-   "outputs": []
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
+]))
+
+# EJERCICIO 1
+cells.append(markdown_cell([
     "### Ejercicio 1: Parsear Respuestas del LLM (15 pts)\n",
     "\n",
     "**Objetivo**: Implementar una función que parsee la respuesta del LLM para extraer llamadas a herramientas.\n",
@@ -668,12 +668,9 @@
     "3. Maneja inputs multilinea\n",
     "4. Funciona sin campo PENSAMIENTO (opcional)\n",
     "5. Es case-insensitive\n"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "metadata": {},
-   "source": [
+]))
+
+cells.append(code_cell([
     "# GRADED FUNCTION: parse_tool_response\n",
     "\n",
     "def parse_tool_response(llm_response: str) -> Optional[Dict[str, str]]:\n",
@@ -717,26 +714,17 @@
     "# HERRAMIENTA: calculator\n",
     "# INPUT: 2 + 2\"\"\"\n",
     "# print(parse_tool_response(test_response))\n"
-   ],
-   "execution_count": null,
-   "outputs": []
-  },
-  {
-   "cell_type": "code",
-   "metadata": {},
-   "source": [
+]))
+
+cells.append(code_cell([
     "# Correr tests para Ejercicio 1\n",
     "# Descomenta cuando hayas implementado la función:\n",
     "\n",
     "# grader.test_parse_tool_response(parse_tool_response)\n"
-   ],
-   "execution_count": null,
-   "outputs": []
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
+]))
+
+# EJERCICIO 2
+cells.append(markdown_cell([
     "### Ejercicio 2: Ejecutar Herramientas de Forma Segura (15 pts)\n",
     "\n",
     "**Objetivo**: Implementar una función que ejecute herramientas de forma segura, manejando errores.\n",
@@ -755,12 +743,9 @@
     "2. Manejo de herramientas inexistentes\n",
     "3. Manejo de errores durante ejecución\n",
     "4. Conversión correcta a string del resultado\n"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "metadata": {},
-   "source": [
+]))
+
+cells.append(code_cell([
     "# GRADED FUNCTION: execute_tool\n",
     "\n",
     "def execute_tool(tool_name: str, tool_input: str, available_tools: Dict[str, SimpleTool]) -> str:\n",
@@ -796,26 +781,17 @@
     "# Descomenta para probar:\n",
     "# tools_test = {'calculator': calculator_tool}\n",
     "# print(execute_tool('calculator', '10 * 5', tools_test))\n"
-   ],
-   "execution_count": null,
-   "outputs": []
-  },
-  {
-   "cell_type": "code",
-   "metadata": {},
-   "source": [
+]))
+
+cells.append(code_cell([
     "# Correr tests para Ejercicio 2\n",
     "# Descomenta cuando hayas implementado la función:\n",
     "\n",
     "# grader.test_execute_tool(execute_tool)\n"
-   ],
-   "execution_count": null,
-   "outputs": []
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
+]))
+
+# EJERCICIO 3
+cells.append(markdown_cell([
     "### Ejercicio 3: Construir Prompts Efectivos (20 pts)\n",
     "\n",
     "**Objetivo**: Implementar una función que construya prompts efectivos para el agente.\n",
@@ -837,12 +813,9 @@
     "2. Prompt incluye la query del usuario\n",
     "3. Prompt incluye instrucciones de formato\n",
     "4. Maneja historial correctamente (opcional)\n"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "metadata": {},
-   "source": [
+]))
+
+cells.append(code_cell([
     "# GRADED FUNCTION: build_agent_prompt\n",
     "\n",
     "def build_agent_prompt(\n",
@@ -882,26 +855,17 @@
     "# tools_test = {'calculator': calculator_tool, 'time': time_tool}\n",
     "# prompt = build_agent_prompt(\"¿Qué hora es?\", tools_test)\n",
     "# print(prompt)\n"
-   ],
-   "execution_count": null,
-   "outputs": []
-  },
-  {
-   "cell_type": "code",
-   "metadata": {},
-   "source": [
+]))
+
+cells.append(code_cell([
     "# Correr tests para Ejercicio 3\n",
     "# Descomenta cuando hayas implementado la función:\n",
     "\n",
     "# grader.test_build_agent_prompt(build_agent_prompt)\n"
-   ],
-   "execution_count": null,
-   "outputs": []
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
+]))
+
+# EJERCICIO 4
+cells.append(markdown_cell([
     "### Ejercicio 4: Implementar un Paso del Loop Agéntico (25 pts)\n",
     "\n",
     "**Objetivo**: Implementar una iteración completa del loop: prompt → LLM → parse → execute → resultado.\n",
@@ -920,12 +884,9 @@
     "2. Ejecuta herramienta si hay tool call\n",
     "3. Maneja herramientas inexistentes\n",
     "4. Retorna resultado correcto\n"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "metadata": {},
-   "source": [
+]))
+
+cells.append(code_cell([
     "# GRADED FUNCTION: simple_agent_step\n",
     "\n",
     "def simple_agent_step(\n",
@@ -975,26 +936,17 @@
     "# tools_test = {'calculator': calculator_tool}\n",
     "# result = simple_agent_step(\"¿Cuánto es 15% de 340?\", tools_test, mock_llm)\n",
     "# print(result)\n"
-   ],
-   "execution_count": null,
-   "outputs": []
-  },
-  {
-   "cell_type": "code",
-   "metadata": {},
-   "source": [
+]))
+
+cells.append(code_cell([
     "# Correr tests para Ejercicio 4\n",
     "# Descomenta cuando hayas implementado la función:\n",
     "\n",
     "# grader.test_simple_agent_step(simple_agent_step)\n"
-   ],
-   "execution_count": null,
-   "outputs": []
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
+]))
+
+# EJERCICIO 5
+cells.append(markdown_cell([
     "### Ejercicio 5: Agente con Memoria Conversacional (25 pts)\n",
     "\n",
     "**Objetivo**: Implementar un agente que mantenga memoria de interacciones previas.\n",
@@ -1015,12 +967,9 @@
     "2. Segunda query incluye historial previo\n",
     "3. Historial se actualiza correctamente\n",
     "4. Contexto se mantiene a través de múltiples turnos\n"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "metadata": {},
-   "source": [
+]))
+
+cells.append(code_cell([
     "# GRADED FUNCTION: agent_with_memory\n",
     "\n",
     "def agent_with_memory(\n",
@@ -1066,35 +1015,23 @@
     "# result1 = agent_with_memory(\"Calcula 10 * 5\", {'calculator': calculator_tool}, mock_llm, history)\n",
     "# print(\"Primera respuesta:\", result1['response'])\n",
     "# print(\"Historial:\", result1['updated_history'])\n"
-   ],
-   "execution_count": null,
-   "outputs": []
-  },
-  {
-   "cell_type": "code",
-   "metadata": {},
-   "source": [
+]))
+
+cells.append(code_cell([
     "# Correr tests para Ejercicio 5\n",
     "# Descomenta cuando hayas implementado la función:\n",
     "\n",
     "# grader.test_agent_with_memory(agent_with_memory)\n"
-   ],
-   "execution_count": null,
-   "outputs": []
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
+]))
+
+# Calificación final
+cells.append(markdown_cell([
     "### 📊 Calificación Final\n",
     "\n",
     "Ejecuta esta celda para obtener tu calificación completa:\n"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "metadata": {},
-   "source": [
+]))
+
+cells.append(code_cell([
     "# Descomenta para obtener tu calificación completa:\n",
     "\n",
     "# grader.grade_all({\n",
@@ -1104,15 +1041,20 @@
     "#     'simple_agent_step': simple_agent_step,\n",
     "#     'agent_with_memory': agent_with_memory\n",
     "# })\n"
-   ],
-   "execution_count": null,
-   "outputs": []
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "<a id=\"6-frameworks\"></a>\n",
+]))
+
+print("Sección 5: Ejercicios GRADED... OK")
+
+# Continuará con secciones 6-10...
+print("\\nNotebook generado parcialmente. Continuando con secciones 6-10...")
+
+# ========================================
+# SECCIÓN 6: FRAMEWORKS (EXPANDIDA)
+# ========================================
+print("Construyendo sección 6: Frameworks...")
+
+cells.append(markdown_cell([
+    '<a id="6-frameworks"></a>\n',
     "## 6. Comparación de Frameworks para Agentes\n",
     "\n",
     "Ahora que entiendes cómo funcionan los agentes internamente, veamos los frameworks populares que abstraen esta complejidad.\n",
@@ -1153,19 +1095,14 @@
     "- ✅ Optimización extrema\n",
     "- ❌ Prototipado rápido\n",
     "- ❌ Equipo pequeño\n"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
+]))
+
+# LangChain expandido
+cells.append(markdown_cell([
     "### LangChain en Detalle\n"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "metadata": {},
-   "source": [
+]))
+
+cells.append(code_cell([
     "# Instalar LangChain si no está disponible\n",
     "# !pip install langchain langchain-openai langchain-community\n",
     "\n",
@@ -1177,14 +1114,9 @@
     "except ImportError:\n",
     "    LANGCHAIN_AVAILABLE = False\n",
     "    print(\"⚠️  LangChain no disponible. Instala con: pip install langchain langchain-openai\")\n"
-   ],
-   "execution_count": null,
-   "outputs": []
-  },
-  {
-   "cell_type": "code",
-   "metadata": {},
-   "source": [
+]))
+
+cells.append(code_cell([
     "if LANGCHAIN_AVAILABLE and OPENAI_AVAILABLE:\n",
     "    # Definir herramientas para LangChain\n",
     "    tools_langchain = [\n",
@@ -1218,23 +1150,16 @@
     "    # print(f\"\\nResultado LangChain: {result}\")\n",
     "else:\n",
     "    print(\"⚠️  Saltando ejemplo de LangChain (dependencias no disponibles)\")\n"
-   ],
-   "execution_count": null,
-   "outputs": []
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
+]))
+
+# LlamaIndex
+cells.append(markdown_cell([
     "### LlamaIndex en Detalle\n",
     "\n",
     "LlamaIndex (antes GPT Index) se especializa en conectar LLMs con datos.\n"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "metadata": {},
-   "source": [
+]))
+
+cells.append(code_cell([
     "# !pip install llama-index\n",
     "\n",
     "try:\n",
@@ -1273,23 +1198,16 @@
     "    agent = OpenAIAgent.from_tools([tool], verbose=True)\n",
     "    response = agent.chat(\"¿Qué dicen los documentos sobre Y?\")\n",
     "    \"\"\")\n"
-   ],
-   "execution_count": null,
-   "outputs": []
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
+]))
+
+# Tabla comparativa ejecutable
+cells.append(markdown_cell([
     "### Benchmark: Desde Cero vs LangChain\n",
     "\n",
     "Comparemos el mismo agente implementado de ambas formas:\n"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "metadata": {},
-   "source": [
+]))
+
+cells.append(code_cell([
     "import time\n",
     "\n",
     "def benchmark_agents():\n",
@@ -1336,14 +1254,10 @@
     "#     print(f\"  Tiempo: {data['tiempo']:.3f}s\")\n",
     "#     print(f\"  Líneas de código: {data['lineas_codigo']}\")\n",
     "#     print(f\"  Respuesta: {data['respuesta']}\")\n"
-   ],
-   "execution_count": null,
-   "outputs": []
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
+]))
+
+# Recomendaciones
+cells.append(markdown_cell([
     "### 🎯 Recomendaciones Prácticas\n",
     "\n",
     "**Para Aprendizaje**:\n",
@@ -1364,1085 +1278,41 @@
     "- ⚠️ Si no entiendes qué hace el código, no lo uses en producción\n",
     "- ⚠️ Si el debugging es muy difícil, considera implementar tú mismo\n",
     "- ⚠️ Si el framework cambia APIs frecuentemente, evalúa dependencia\n"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "<a id=\"7-ejercicios-avanzados\"></a>\n",
-    "## 7. Ejercicios Avanzados (Opcionales)\n",
-    "\n",
-    "Estos ejercicios son para profundizar tu comprensión. No son calificados, pero te ayudarán a desarrollar habilidades avanzadas.\n"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "### 🟡 Ejercicio Avanzado 1: Multi-Step Tool Use\n",
-    "\n",
-    "**Desafío**: Implementa un agente que pueda usar múltiples herramientas en secuencia.\n",
-    "\n",
-    "**Ejemplo**:\n",
-    "- Query: \"Calcula cuántos días faltan para el 31 de diciembre y multiplica por 24\"\n",
-    "- Paso 1: Usar `get_time` para obtener fecha actual\n",
-    "- Paso 2: Usar `calculator` para calcular días restantes\n",
-    "- Paso 3: Usar `calculator` para multiplicar por 24\n",
-    "- Paso 4: Responder\n",
-    "\n",
-    "**Pistas**:\n",
-    "- Necesitarás un loop en `SimpleAgent.run()`\n",
-    "- Después de cada tool use, actualiza la query con la observación\n",
-    "- Limita el número de iteraciones para evitar loops infinitos\n"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "metadata": {},
-   "source": [
-    "# Tu código aquí\n",
-    "# Modifica SimpleAgent o crea MultiStepAgent\n",
-    "\n",
-    "pass\n"
-   ],
-   "execution_count": null,
-   "outputs": []
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "### 🟡 Ejercicio Avanzado 2: Error Recovery\n",
-    "\n",
-    "**Desafío**: Implementa un agente que pueda recuperarse de errores.\n",
-    "\n",
-    "**Escenarios**:\n",
-    "1. Tool falla → Agente intenta con otra herramienta\n",
-    "2. Input inválido → Agente reformula el input\n",
-    "3. Resultado inesperado → Agente razona y reintenta\n",
-    "\n",
-    "**Ejemplo**:\n",
-    "```\n",
-    "User: \"Divide 100 entre 0\"\n",
-    "Agent: *intenta calculator(100/0)*\n",
-    "Tool: \"Error: division by zero\"\n",
-    "Agent: \"Lo siento, no puedo dividir entre cero. El resultado no está definido.\"\n",
-    "```\n"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "metadata": {},
-   "source": [
-    "# Tu código aquí\n",
-    "# Agrega lógica de retry y error handling\n",
-    "\n",
-    "pass\n"
-   ],
-   "execution_count": null,
-   "outputs": []
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "### 🔴 Ejercicio Avanzado 3: Planning Agent\n",
-    "\n",
-    "**Desafío**: Implementa un agente que planifique antes de actuar.\n",
-    "\n",
-    "**Arquitectura**:\n",
-    "1. **Planner**: Descompone tarea compleja en subtareas\n",
-    "2. **Executor**: Ejecuta cada subtarea\n",
-    "3. **Validator**: Verifica que el plan funcionó\n",
-    "\n",
-    "**Ejemplo**:\n",
-    "```\n",
-    "Task: \"Investiga qué lenguaje de programación es más popular y calcula su crecimiento\"\n",
-    "\n",
-    "Plan:\n",
-    "1. Search(\"most popular programming language 2024\")\n",
-    "2. Extract(language_name from results)\n",
-    "3. Search(f\"{language_name} popularity growth rate\")\n",
-    "4. Calculate(growth_percentage)\n",
-    "5. Summarize(findings)\n",
-    "```\n",
-    "\n",
-    "**Recursos**:\n",
-    "- Paper: \"ReAct: Synergizing Reasoning and Acting in Language Models\"\n",
-    "- Paper: \"Plan-and-Solve Prompting\"\n"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "metadata": {},
-   "source": [
-    "# Tu código aquí\n",
-    "# Implementa PlanningAgent con fases separadas\n",
-    "\n",
-    "class PlanningAgent:\n",
-    "    def __init__(self, tools, llm):\n",
-    "        pass\n",
-    "    \n",
-    "    def plan(self, task: str) -> List[str]:\n",
-    "        \"\"\"Genera un plan de pasos a seguir\"\"\"\n",
-    "        pass\n",
-    "    \n",
-    "    def execute_plan(self, plan: List[str]):\n",
-    "        \"\"\"Ejecuta el plan paso a paso\"\"\"\n",
-    "        pass\n"
-   ],
-   "execution_count": null,
-   "outputs": []
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "### 🔴 Ejercicio Avanzado 4: Multi-Agent System\n",
-    "\n",
-    "**Desafío**: Crea un sistema con múltiples agentes especializados.\n",
-    "\n",
-    "**Agentes**:\n",
-    "1. **Researcher**: Busca información\n",
-    "2. **Analyzer**: Analiza datos\n",
-    "3. **Writer**: Redacta respuestas\n",
-    "4. **Coordinator**: Orquesta a los demás\n",
-    "\n",
-    "**Ejemplo de flujo**:\n",
-    "```\n",
-    "User: \"Escribe un resumen sobre el cambio climático con datos actuales\"\n",
-    "\n",
-    "Coordinator → Researcher: \"Busca datos sobre cambio climático 2024\"\n",
-    "Researcher → Analyzer: [datos encontrados]\n",
-    "Analyzer → Writer: [análisis estadístico]\n",
-    "Writer → User: [resumen bien escrito]\n",
-    "```\n",
-    "\n",
-    "**Recursos**:\n",
-    "- Paper: \"MetaGPT: Meta Programming for Multi-Agent Collaborative Framework\"\n",
-    "- Framework: AutoGen (Microsoft Research)\n"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "metadata": {},
-   "source": [
-    "# Tu código aquí\n",
-    "# Implementa sistema multi-agente\n",
-    "\n",
-    "pass\n"
-   ],
-   "execution_count": null,
-   "outputs": []
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "<a id=\"8-papers\"></a>\n",
-    "## 8. 📄 Papers y Referencias\n",
-    "\n",
-    "Los LLM Agents son un campo muy reciente (2022-2024). Aquí tienes los papers más importantes organizados por tema.\n",
-    "\n",
-    "### 📖 Guía de Lectura\n",
-    "\n",
-    "**Para Principiantes** (empieza aquí):\n",
-    "1. ReAct paper (Yao et al., 2023)\n",
-    "2. Lilian Weng's blog post\n",
-    "3. Chain-of-Thought paper (Wei et al., 2022)\n",
-    "\n",
-    "**Para Implementadores**:\n",
-    "1. Toolformer (Schick et al., 2023)\n",
-    "2. ToolLLM (Qin et al., 2023)\n",
-    "3. Gorilla (Patil et al., 2023)\n",
-    "\n",
-    "**Para Investigadores**:\n",
-    "1. Surveys (Wang et al., Xi et al.)\n",
-    "2. Evaluation papers (AgentBench, WebArena)\n",
-    "3. Multi-agent systems (MetaGPT, AutoGen)\n",
-    "\n",
-    "---\n"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "### 🏛️ Papers Fundacionales\n",
-    "\n",
-    "1. **ReAct: Synergizing Reasoning and Acting in Language Models**\n",
-    "   - Autores: Yao et al., ICLR 2023\n",
-    "   - Link: https://arxiv.org/abs/2210.03629\n",
-    "   - Citas: 3,500+\n",
-    "   - **Por qué leerlo**: Introduce el patrón ReAct (Reasoning + Acting) que usamos en este notebook. Es THE foundational paper para agentes.\n",
-    "   - **Key insight**: Alternar entre razonamiento (thinking) y acción (tool use) mejora significativamente el desempeño.\n",
-    "\n",
-    "2. **Toolformer: Language Models Can Teach Themselves to Use Tools**\n",
-    "   - Autores: Schick et al., Meta AI, 2023\n",
-    "   - Link: https://arxiv.org/abs/2302.04761\n",
-    "   - Citas: 2,800+\n",
-    "   - **Por qué leerlo**: Muestra cómo LLMs pueden aprender a usar herramientas mediante self-supervised learning.\n",
-    "   - **Key insight**: Los LLMs pueden autodescubrir cuándo necesitan herramientas externas.\n",
-    "\n",
-    "3. **Language Models as Agent Models**\n",
-    "   - Autores: Andreas, MIT, 2022\n",
-    "   - Link: https://arxiv.org/abs/2212.01681\n",
-    "   - **Por qué leerlo**: Análisis teórico profundo sobre LLMs como agentes.\n",
-    "   - **Key insight**: Formaliza la conexión entre LLMs y teoría de agentes en RL.\n"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "### 🎯 Prompting y Razonamiento\n",
-    "\n",
-    "4. **Chain-of-Thought Prompting Elicits Reasoning in Large Language Models**\n",
-    "   - Autores: Wei et al., Google Research, 2022\n",
-    "   - Link: https://arxiv.org/abs/2201.11903\n",
-    "   - Citas: 8,000+ (MEGA influential)\n",
-    "   - **Por qué leerlo**: Revolucionó cómo hacemos prompting. Base de todo razonamiento agéntico.\n",
-    "   - **Key insight**: \"Let's think step by step\" mejora dramáticamente el razonamiento.\n",
-    "\n",
-    "5. **Tree of Thoughts: Deliberate Problem Solving with Large Language Models**\n",
-    "   - Autores: Yao et al., Princeton, 2023\n",
-    "   - Link: https://arxiv.org/abs/2305.10601\n",
-    "   - Citas: 1,200+\n",
-    "   - **Por qué leerlo**: Extiende CoT a exploración tipo árbol.\n",
-    "   - **Key insight**: Explorar múltiples caminos de razonamiento en paralelo.\n",
-    "\n",
-    "6. **Self-Consistency Improves Chain of Thought Reasoning**\n",
-    "   - Autores: Wang et al., Google Research, 2022\n",
-    "   - Link: https://arxiv.org/abs/2203.11171\n",
-    "   - Citas: 2,500+\n",
-    "   - **Por qué leerlo**: Técnica simple pero poderosa para mejorar precisión.\n",
-    "   - **Key insight**: Generar múltiples respuestas y votar por mayoría.\n"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "### 🔧 Tool Use y Function Calling\n",
-    "\n",
-    "7. **Gorilla: Large Language Model Connected with Massive APIs**\n",
-    "   - Autores: Patil et al., UC Berkeley, 2023\n",
-    "   - Link: https://arxiv.org/abs/2305.15334\n",
-    "   - **Por qué leerlo**: LLM especializado en llamar APIs correctamente.\n",
-    "   - **Key insight**: Fine-tuning específico para tool use mejora mucho la precisión.\n",
-    "\n",
-    "8. **ToolLLM: Facilitating Large Language Models to Master 16000+ Real-world APIs**\n",
-    "   - Autores: Qin et al., Tsinghua University, 2023\n",
-    "   - Link: https://arxiv.org/abs/2307.16789\n",
-    "   - **Por qué leerlo**: Dataset masivo de APIs reales + framework de evaluación.\n",
-    "   - **Key insight**: Necesitamos datasets especializados para entrenar agentes efectivos.\n",
-    "\n",
-    "9. **OpenAI Function Calling**\n",
-    "   - Documentación: https://platform.openai.com/docs/guides/function-calling\n",
-    "   - **Por qué leerlo**: Estándar de facto en la industria.\n",
-    "   - **Key insight**: Structured outputs hacen tool use más confiable.\n"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "### 👥 Multi-Agent Systems\n",
-    "\n",
-    "10. **MetaGPT: Meta Programming for Multi-Agent Collaborative Framework**\n",
-    "    - Autores: Hong et al., 2023\n",
-    "    - Link: https://arxiv.org/abs/2308.00352\n",
-    "    - Citas: 800+\n",
-    "    - **Por qué leerlo**: Framework para múltiples agentes colaborando en desarrollo de software.\n",
-    "    - **Key insight**: Asignar roles (Product Manager, Engineer, QA) mejora colaboración.\n",
-    "\n",
-    "11. **AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation**\n",
-    "    - Autores: Wu et al., Microsoft Research, 2023\n",
-    "    - Link: https://arxiv.org/abs/2308.08155\n",
-    "    - **Por qué leerlo**: Framework práctico de Microsoft para multi-agentes.\n",
-    "    - **Key insight**: Conversaciones entre agentes pueden resolver tareas complejas.\n",
-    "\n",
-    "12. **AgentVerse: Facilitating Multi-Agent Collaboration**\n",
-    "    - Autores: Chen et al., Tsinghua, 2023\n",
-    "    - Link: https://arxiv.org/abs/2308.10848\n",
-    "    - **Por qué leerlo**: Estudia dinámicas de grupos de agentes.\n",
-    "    - **Key insight**: Diferentes topologías de comunicación afectan el desempeño.\n"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "### 🧠 Memory y RAG\n",
-    "\n",
-    "13. **MemGPT: Towards LLMs as Operating Systems**\n",
-    "    - Autores: Packer et al., UC Berkeley, 2023\n",
-    "    - Link: https://arxiv.org/abs/2310.08560\n",
-    "    - **Por qué leerlo**: Innovadora arquitectura de memoria inspirada en OS.\n",
-    "    - **Key insight**: Separar memoria en main context + external storage como un OS.\n",
-    "\n",
-    "14. **Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks**\n",
-    "    - Autores: Lewis et al., Meta AI, 2020\n",
-    "    - Link: https://arxiv.org/abs/2005.11401\n",
-    "    - Citas: 5,000+\n",
-    "    - **Por qué leerlo**: Fundación de RAG, critical para agentes con conocimiento externo.\n",
-    "    - **Key insight**: Combinar retrieval + generation supera modelos puramente paramétricos.\n",
-    "\n",
-    "15. **Reflexion: Language Agents with Verbal Reinforcement Learning**\n",
-    "    - Autores: Shinn et al., Northeastern, 2023\n",
-    "    - Link: https://arxiv.org/abs/2303.11366\n",
-    "    - Citas: 900+\n",
-    "    - **Por qué leerlo**: Agentes que aprenden de sus errores mediante auto-reflexión.\n",
-    "    - **Key insight**: Feedback textual permite \"reinforcement learning\" sin gradientes.\n"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "### 📋 Planning\n",
-    "\n",
-    "16. **HuggingGPT: Solving AI Tasks with ChatGPT and Friends in Hugging Face**\n",
-    "    - Autores: Shen et al., Microsoft, 2023\n",
-    "    - Link: https://arxiv.org/abs/2303.17580\n",
-    "    - Citas: 1,500+\n",
-    "    - **Por qué leerlo**: LLM como controlador de otros modelos especializados.\n",
-    "    - **Key insight**: Un LLM puede orquestar cientos de modelos especializados.\n",
-    "\n",
-    "17. **Plan-and-Solve Prompting: Improving Zero-Shot Chain-of-Thought Reasoning**\n",
-    "    - Autores: Wang et al., 2023\n",
-    "    - Link: https://arxiv.org/abs/2305.04091\n",
-    "    - Citas: 600+\n",
-    "    - **Por qué leerlo**: Mejora CoT al separar planning y execution.\n",
-    "    - **Key insight**: \"Let's first understand the problem and devise a plan\" funciona mejor que CoT vanilla.\n"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "### 🧪 Evaluation y Benchmarks\n",
-    "\n",
-    "18. **AgentBench: Evaluating LLMs as Agents**\n",
-    "    - Autores: Liu et al., Tsinghua, 2023\n",
-    "    - Link: https://arxiv.org/abs/2308.03688\n",
-    "    - **Por qué leerlo**: Benchmark comprehensive para evaluar agentes.\n",
-    "    - **Key insight**: Performance en benchmarks tradicionales != performance como agente.\n",
-    "\n",
-    "19. **WebArena: A Realistic Web Environment for Building Autonomous Agents**\n",
-    "    - Autores: Zhou et al., CMU, 2023\n",
-    "    - Link: https://arxiv.org/abs/2307.13854\n",
-    "    - **Por qué leerlo**: Environment realista para evaluar web agents.\n",
-    "    - **Key insight**: Agents actuales aún luchan con tareas web complejas.\n"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "### 🛡️ Safety y Alignment\n",
-    "\n",
-    "20. **Jailbroken: How Does LLM Safety Training Fail?**\n",
-    "    - Autores: Wei et al., Anthropic + OpenAI, 2023\n",
-    "    - Link: https://arxiv.org/abs/2307.02483\n",
-    "    - **Por qué leerlo**: Critical para entender vulnerabilidades de agentes.\n",
-    "    - **Key insight**: Safety training puede fallar de maneras sorprendentes.\n",
-    "\n",
-    "21. **Constitutional AI: Harmlessness from AI Feedback**\n",
-    "    - Autores: Bai et al., Anthropic, 2022\n",
-    "    - Link: https://arxiv.org/abs/2212.08073\n",
-    "    - Citas: 1,200+\n",
-    "    - **Por qué leerlo**: Método de Anthropic para alinear agentes.\n",
-    "    - **Key insight**: LLMs pueden auto-mejorarse usando principios constitucionales.\n"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "### 📚 Surveys y Reviews\n",
-    "\n",
-    "22. **A Survey on Large Language Model based Autonomous Agents**\n",
-    "    - Autores: Wang et al., 2023\n",
-    "    - Link: https://arxiv.org/abs/2308.11432\n",
-    "    - Citas: 800+\n",
-    "    - **Por qué leerlo**: Comprehensive survey de ~50 páginas. Excelente overview.\n",
-    "    - **Scope**: Cubre construcción, aplicaciones, y evaluación de agentes.\n",
-    "\n",
-    "23. **The Rise and Potential of Large Language Model Based Agents**\n",
-    "    - Autores: Xi et al., 2023\n",
-    "    - Link: https://arxiv.org/abs/2309.07864\n",
-    "    - Citas: 500+\n",
-    "    - **Por qué leerlo**: Survey reciente con foco en aplicaciones prácticas.\n",
-    "    - **Scope**: Desde fundamentos hasta aplicaciones en robótica, gaming, etc.\n"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "### 🏗️ Frameworks y Documentación\n",
-    "\n",
-    "24. **LangChain Documentation**\n",
-    "    - Link: https://python.langchain.com/docs/modules/agents/\n",
-    "    - **Por qué leerlo**: Framework más popular para agentes.\n",
-    "    - **Scope**: Tutoriales, ejemplos, best practices.\n",
-    "\n",
-    "25. **LlamaIndex Documentation**\n",
-    "    - Link: https://docs.llamaindex.ai/en/stable/\n",
-    "    - **Por qué leerlo**: Mejor framework para RAG + agentes.\n",
-    "    - **Scope**: Especialmente fuerte en data connectors.\n"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "### 📝 Blogs y Recursos Educativos\n",
-    "\n",
-    "26. **LLM Powered Autonomous Agents** (Lilian Weng)\n",
-    "    - Link: https://lilianweng.github.io/posts/2023-06-23-agent/\n",
-    "    - **Por qué leerlo**: Excelente overview técnico por investigadora de OpenAI.\n",
-    "    - **Scope**: Cubre planning, memory, tool use con diagramas claros.\n",
-    "\n",
-    "27. **Building LLM applications for production** (Chip Huyen)\n",
-    "    - Link: https://huyenchip.com/2023/04/11/llm-engineering.html\n",
-    "    - **Por qué leerlo**: Perspectiva práctica de ingeniera en Snorkel AI.\n",
-    "    - **Scope**: Costos, latencia, evaluación, prompt engineering.\n"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "### 🗺️ Roadmap de Lectura por Caso de Uso\n",
-    "\n",
-    "**Si quieres construir un asistente personal**:\n",
-    "- ReAct → MemGPT → Reflexion → ToolLLM\n",
-    "\n",
-    "**Si quieres construir agentes para desarrollo de software**:\n",
-    "- MetaGPT → HuggingGPT → AutoGen → AgentBench\n",
-    "\n",
-    "**Si quieres construir agentes con bases de datos/documentos**:\n",
-    "- RAG → LlamaIndex docs → MemGPT → ToolLLM\n",
-    "\n",
-    "**Si estás investigando agentes en general**:\n",
-    "- Wang et al. survey → Xi et al. survey → Papers por tema de interés\n",
-    "\n",
-    "**Si te preocupa safety**:\n",
-    "- Constitutional AI → Jailbroken → AgentBench (eval section)\n"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "<a id=\"9-best-practices\"></a>\n",
-    "## 9. 💡 Best Practices y Producción\n",
-    "\n",
-    "Implementar agentes en producción requiere consideraciones especiales que van más allá de prototipos.\n"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "### 🏗️ Arquitectura para Producción\n",
-    "\n",
-    "**Principios clave**:\n",
-    "\n",
-    "1. **Separation of Concerns**\n",
-    "   - LLM brain: Solo razonamiento\n",
-    "   - Tools: Lógica de negocio aislada\n",
-    "   - Orchestrator: Control de flujo\n",
-    "   - State management: Separado del resto\n",
-    "\n",
-    "2. **Observability**\n",
-    "   ```python\n",
-    "   # Logging exhaustivo\n",
-    "   logger.info(f\"Agent step {i}: Tool={action.tool}, Input={action.input}\")\n",
-    "   logger.info(f\"Tool output: {observation}\")\n",
-    "   logger.info(f\"LLM tokens: {response.usage}\")\n",
-    "   ```\n",
-    "\n",
-    "3. **Error Handling**\n",
-    "   ```python\n",
-    "   try:\n",
-    "       result = tool.run(input)\n",
-    "   except ToolExecutionError as e:\n",
-    "       # Log error\n",
-    "       # Retry con exponential backoff\n",
-    "       # O skip y continuar\n",
-    "   except Exception as e:\n",
-    "       # Log unexpected error\n",
-    "       # Graceful degradation\n",
-    "   ```\n",
-    "\n",
-    "4. **Rate Limiting y Costos**\n",
-    "   ```python\n",
-    "   # Limitar llamadas a LLM\n",
-    "   @rate_limit(calls_per_minute=60)\n",
-    "   def call_llm(prompt):\n",
-    "       ...\n",
-    "   \n",
-    "   # Monitorear costos\n",
-    "   cost_tracker.add(tokens_used * price_per_token)\n",
-    "   if cost_tracker.total > budget:\n",
-    "       raise BudgetExceededError()\n",
-    "   ```\n"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "### 🐛 Common Pitfalls y Soluciones\n",
-    "\n",
-    "#### Pitfall 1: Infinite Loops\n",
-    "\n",
-    "**Problema**: Agente entra en loop infinito.\n",
-    "\n",
-    "```python\n",
-    "# ❌ MAL\n",
-    "while True:\n",
-    "    action = agent.step()\n",
-    "    if action.is_final:\n",
-    "        break\n",
-    "```\n",
-    "\n",
-    "**Solución**:\n",
-    "```python\n",
-    "# ✅ BIEN\n",
-    "max_iterations = 10\n",
-    "for i in range(max_iterations):\n",
-    "    action = agent.step()\n",
-    "    if action.is_final:\n",
-    "        break\n",
-    "else:\n",
-    "    logger.warning(f\"Agent hit max iterations ({max_iterations})\")\n",
-    "    return fallback_response()\n",
-    "```\n",
-    "\n",
-    "#### Pitfall 2: Prompt Injection\n",
-    "\n",
-    "**Problema**: Usuario manipula el agente via prompts maliciosos.\n",
-    "\n",
-    "```python\n",
-    "# ❌ VULNERABLE\n",
-    "prompt = f\"User query: {user_input}\"  # user_input podría contener \"Ignore previous instructions...\"\n",
-    "```\n",
-    "\n",
-    "**Solución**:\n",
-    "```python\n",
-    "# ✅ MEJOR\n",
-    "# 1. Sanitizar input\n",
-    "user_input = sanitize(user_input)\n",
-    "\n",
-    "# 2. Usar structured prompts\n",
-    "messages = [\n",
-    "    {\"role\": \"system\", \"content\": \"You are a helpful assistant...\"},\n",
-    "    {\"role\": \"user\", \"content\": user_input}  # Claramente separado\n",
-    "]\n",
-    "\n",
-    "# 3. Validar outputs\n",
-    "if not is_safe_action(action):\n",
-    "    raise SecurityError()\n",
-    "```\n",
-    "\n",
-    "#### Pitfall 3: Tool Hallucination\n",
-    "\n",
-    "**Problema**: LLM inventa herramientas que no existen.\n",
-    "\n",
-    "**Solución**:\n",
-    "```python\n",
-    "# Validar tool calls\n",
-    "if action.tool not in available_tools:\n",
-    "    # Re-prompt con lista de herramientas válidas\n",
-    "    error_prompt = f\"\"\"Error: '{action.tool}' no existe.\n",
-    "    Herramientas disponibles: {list(available_tools.keys())}\n",
-    "    Por favor, elige una herramienta válida.\"\"\"\n",
-    "    return agent.step(error_prompt)\n",
-    "```\n",
-    "\n",
-    "#### Pitfall 4: Context Window Overflow\n",
-    "\n",
-    "**Problema**: Historial crece hasta exceder context window.\n",
-    "\n",
-    "**Solución**:\n",
-    "```python\n",
-    "# Summarization strategy\n",
-    "if len(history) > max_history:\n",
-    "    # Resumir historia antigua\n",
-    "    summary = llm.summarize(history[:10])\n",
-    "    history = [{\"role\": \"system\", \"content\": f\"Summary: {summary}\"}] + history[10:]\n",
-    "```\n"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "### 💰 Cost Optimization\n",
-    "\n",
-    "**Estrategias**:\n",
-    "\n",
-    "1. **Use cheaper models where possible**\n",
-    "   ```python\n",
-    "   # GPT-4 para razonamiento crítico\n",
-    "   # GPT-3.5 para tareas simples\n",
-    "   if complexity_score(task) > threshold:\n",
-    "       model = \"gpt-4\"\n",
-    "   else:\n",
-    "       model = \"gpt-3.5-turbo\"\n",
-    "   ```\n",
-    "\n",
-    "2. **Cache responses**\n",
-    "   ```python\n",
-    "   @cache(ttl=3600)  # Cache por 1 hora\n",
-    "   def call_llm(prompt):\n",
-    "       # Queries idénticas no gastan API calls\n",
-    "   ```\n",
-    "\n",
-    "3. **Batch operations**\n",
-    "   ```python\n",
-    "   # En vez de 10 llamadas\n",
-    "   results = [llm.call(q) for q in queries]  # ❌ 10x costo\n",
-    "   \n",
-    "   # Batch\n",
-    "   batch_prompt = \"\\n\".join(f\"{i}. {q}\" for i, q in enumerate(queries))\n",
-    "   batch_result = llm.call(batch_prompt)  # ✅ 1x costo (tal vez)\n",
-    "   ```\n",
-    "\n",
-    "4. **Monitoreo de costos**\n",
-    "   ```python\n",
-    "   class CostTracker:\n",
-    "       def __init__(self, budget: float):\n",
-    "           self.budget = budget\n",
-    "           self.spent = 0.0\n",
-    "       \n",
-    "       def add_call(self, tokens: int, model: str):\n",
-    "           cost = tokens * PRICE_PER_1K_TOKENS[model] / 1000\n",
-    "           self.spent += cost\n",
-    "           if self.spent > self.budget:\n",
-    "               raise BudgetExceededError(f\"Spent ${self.spent:.2f} > ${self.budget:.2f}\")\n",
-    "   ```\n"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "### 🔒 Security Best Practices\n",
-    "\n",
-    "1. **Sandboxing de tool execution**\n",
-    "   ```python\n",
-    "   # ❌ PELIGROSO: eval directo\n",
-    "   result = eval(user_code)\n",
-    "   \n",
-    "   # ✅ SEGURO: sandbox\n",
-    "   import docker\n",
-    "   container = docker.from_image(\"python:3.9-alpine\")\n",
-    "   result = container.exec(user_code, timeout=5, network=False)\n",
-    "   ```\n",
-    "\n",
-    "2. **Principle of Least Privilege**\n",
-    "   - Tools solo tienen permisos mínimos necesarios\n",
-    "   - Database tools → read-only cuando sea posible\n",
-    "   - File system tools → limitados a directorio específico\n",
-    "\n",
-    "3. **Input Validation**\n",
-    "   ```python\n",
-    "   def validate_tool_input(tool_name: str, input_str: str):\n",
-    "       if tool_name == \"database_query\":\n",
-    "           # No permitir DROP, DELETE, etc.\n",
-    "           forbidden = [\"DROP\", \"DELETE\", \"UPDATE\", \"INSERT\"]\n",
-    "           if any(kw in input_str.upper() for kw in forbidden):\n",
-    "               raise SecurityError(\"Forbidden SQL operation\")\n",
-    "   ```\n",
-    "\n",
-    "4. **Audit Logging**\n",
-    "   ```python\n",
-    "   # Log TODAS las acciones para auditoria\n",
-    "   audit_log.record({\n",
-    "       \"timestamp\": datetime.now(),\n",
-    "       \"user_id\": user.id,\n",
-    "       \"agent_id\": agent.id,\n",
-    "       \"action\": action.tool,\n",
-    "       \"input\": action.input,\n",
-    "       \"output\": result,\n",
-    "       \"cost\": cost\n",
-    "   })\n",
-    "   ```\n"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "### 📊 Monitoring y Metrics\n",
-    "\n",
-    "**Métricas críticas a trackear**:\n",
-    "\n",
-    "1. **Performance Metrics**\n",
-    "   - Latency promedio por query\n",
-    "   - Latency p95, p99\n",
-    "   - Success rate\n",
-    "   - Tool usage distribution\n",
-    "\n",
-    "2. **Cost Metrics**\n",
-    "   - Costo por query\n",
-    "   - Tokens promedio por query\n",
-    "   - Costo total diario/mensual\n",
-    "\n",
-    "3. **Quality Metrics**\n",
-    "   - User satisfaction (thumbs up/down)\n",
-    "   - Task completion rate\n",
-    "   - Retry rate\n",
-    "   - Error rate por tipo de error\n",
-    "\n",
-    "4. **Agent Behavior Metrics**\n",
-    "   - Promedio de pasos por query\n",
-    "   - Tool call accuracy\n",
-    "   - Hallucination rate\n",
-    "   - Loop frequency\n",
-    "\n",
-    "**Ejemplo de dashboard**:\n",
-    "```python\n",
-    "# Prometheus + Grafana\n",
-    "from prometheus_client import Counter, Histogram\n",
-    "\n",
-    "queries_total = Counter('agent_queries_total', 'Total queries')\n",
-    "query_duration = Histogram('agent_query_duration_seconds', 'Query duration')\n",
-    "query_cost = Histogram('agent_query_cost_dollars', 'Query cost')\n",
-    "\n",
-    "with query_duration.time():\n",
-    "    result = agent.run(query)\n",
-    "    queries_total.inc()\n",
-    "    query_cost.observe(calculate_cost(result))\n",
-    "```\n"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "### 🎯 Use Cases Reales y Patrones\n",
-    "\n",
-    "#### Use Case 1: Customer Support Agent\n",
-    "\n",
-    "**Arquitectura**:\n",
-    "- **Tools**: FAQ search, ticket creation, knowledge base RAG\n",
-    "- **Memory**: Conversation history + user profile\n",
-    "- **Fallback**: Escalate to human si confidence < threshold\n",
-    "\n",
-    "**Patrón**:\n",
-    "```python\n",
-    "if agent.confidence < 0.7:\n",
-    "    return escalate_to_human(query, context)\n",
-    "```\n",
-    "\n",
-    "#### Use Case 2: Code Review Agent\n",
-    "\n",
-    "**Arquitectura**:\n",
-    "- **Tools**: Static analysis, test runner, git diff\n",
-    "- **Memory**: Code style guide, previous reviews\n",
-    "- **Output**: Structured comments in GitHub\n",
-    "\n",
-    "**Patrón**:\n",
-    "```python\n",
-    "# Multi-pass review\n",
-    "pass1 = agent.review(code, focus=\"bugs\")\n",
-    "pass2 = agent.review(code, focus=\"style\")\n",
-    "pass3 = agent.review(code, focus=\"performance\")\n",
-    "```\n",
-    "\n",
-    "#### Use Case 3: Data Analysis Agent\n",
-    "\n",
-    "**Arquitectura**:\n",
-    "- **Tools**: SQL query, Python exec (sandboxed), plotting\n",
-    "- **Memory**: Dataset schema, previous queries\n",
-    "- **Output**: Visualizations + narrative insights\n",
-    "\n",
-    "**Patrón**:\n",
-    "```python\n",
-    "# Iterative refinement\n",
-    "query = agent.generate_sql(user_question)\n",
-    "results = db.execute(query)\n",
-    "if results.empty:\n",
-    "    query = agent.refine_sql(query, \"No results, try different approach\")\n",
-    "```\n"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "### ✅ Production Checklist\n",
-    "\n",
-    "Antes de deployar a producción:\n",
-    "\n",
-    "**Funcionalidad**:\n",
-    "- [ ] Manejo de errores en todos los tool calls\n",
-    "- [ ] Límites de iteraciones del agent loop\n",
-    "- [ ] Fallback responses para casos sin respuesta\n",
-    "- [ ] Validación de todos los inputs y outputs\n",
-    "\n",
-    "**Performance**:\n",
-    "- [ ] Latency p95 < SLA target\n",
-    "- [ ] Caching implementado donde sea posible\n",
-    "- [ ] Rate limiting configurado\n",
-    "- [ ] Timeouts en todos los IO operations\n",
-    "\n",
-    "**Security**:\n",
-    "- [ ] Tool execution sandboxed\n",
-    "- [ ] Input sanitization implementada\n",
-    "- [ ] Secrets management (no hardcoded API keys)\n",
-    "- [ ] Audit logging habilitado\n",
-    "\n",
-    "**Observability**:\n",
-    "- [ ] Logging estructurado\n",
-    "- [ ] Metrics dashboard configurado\n",
-    "- [ ] Alertas para errores críticos\n",
-    "- [ ] Tracing de requests end-to-end\n",
-    "\n",
-    "**Cost Management**:\n",
-    "- [ ] Budget limits configurados\n",
-    "- [ ] Cost tracking por usuario/query\n",
-    "- [ ] Alertas de costo anormal\n",
-    "- [ ] Modelo selection logic (cheap vs expensive)\n",
-    "\n",
-    "**Testing**:\n",
-    "- [ ] Unit tests para cada tool\n",
-    "- [ ] Integration tests para agent loop\n",
-    "- [ ] Adversarial tests (prompt injection, etc.)\n",
-    "- [ ] Load testing completado\n"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "<a id=\"10-navegacion\"></a>\n",
-    "## 10. 📍 Navegación y Próximos Pasos\n",
-    "\n",
-    "### 🎉 ¡Felicitaciones!\n",
-    "\n",
-    "Has completado el notebook de Introducción a LLM Agents. Ahora puedes:\n",
-    "\n",
-    "✅ Explicar la diferencia entre un LLM y un Agente  \n",
-    "✅ Implementar un agente básico desde cero  \n",
-    "✅ Entender el loop observación → razonamiento → acción  \n",
-    "✅ Usar frameworks como LangChain  \n",
-    "✅ Conocer los papers fundamentales del campo  \n",
-    "✅ Aplicar best practices para producción  \n"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "### 📚 Ruta de Aprendizaje Sugerida\n",
-    "\n",
-    "```\n",
-    "Tú estás aquí ──┐\n",
-    "                │\n",
-    "                ▼\n",
-    "┌─────────────────────────────────────────────────────────────┐\n",
-    "│ 01. Intro a LLM Agents ✅                                   │\n",
-    "│ • Fundamentos de agentes                                    │\n",
-    "│ • Agent loop básico                                         │\n",
-    "│ • Tool use simple                                           │\n",
-    "└─────────────────────────────────────────────────────────────┘\n",
-    "                │\n",
-    "                ▼\n",
-    "┌─────────────────────────────────────────────────────────────┐\n",
-    "│ 02. Prompting Agéntico 🎯                                   │\n",
-    "│ • Chain-of-Thought (CoT)                                    │\n",
-    "│ • Tree-of-Thought (ToT)                                     │\n",
-    "│ • ReAct pattern en detalle                                  │\n",
-    "│ • Self-consistency                                          │\n",
-    "└─────────────────────────────────────────────────────────────┘\n",
-    "                │\n",
-    "                ▼\n",
-    "┌─────────────────────────────────────────────────────────────┐\n",
-    "│ 03. Memory y RAG para Agentes 🧠                            │\n",
-    "│ • Short-term vs long-term memory                            │\n",
-    "│ • Vector stores y retrieval                                 │\n",
-    "│ • MemGPT architecture                                       │\n",
-    "└─────────────────────────────────────────────────────────────┘\n",
-    "                │\n",
-    "                ▼\n",
-    "┌─────────────────────────────────────────────────────────────┐\n",
-    "│ 04. Planning y Reasoning Avanzado 🎲                        │\n",
-    "│ • Hierarchical planning                                     │\n",
-    "│ • Task decomposition                                        │\n",
-    "│ • Search algorithms (BFS, A*)                               │\n",
-    "└─────────────────────────────────────────────────────────────┘\n",
-    "                │\n",
-    "                ▼\n",
-    "┌─────────────────────────────────────────────────────────────┐\n",
-    "│ 05. Multi-Agent Systems 👥                                  │\n",
-    "│ • Agent communication protocols                             │\n",
-    "│ • Coordination strategies                                   │\n",
-    "│ • Conflict resolution                                       │\n",
-    "└─────────────────────────────────────────────────────────────┘\n",
-    "                │\n",
-    "                ▼\n",
-    "┌─────────────────────────────────────────────────────────────┐\n",
-    "│ 06. Proyecto Final: Production Agent 🚀                     │\n",
-    "│ • Design + implementation                                   │\n",
-    "│ • Deployment                                                │\n",
-    "│ • Monitoring y optimization                                 │\n",
-    "└─────────────────────────────────────────────────────────────┘\n",
-    "```\n"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "### 🎯 Próximo Notebook Recomendado\n",
-    "\n",
-    "**[➡️ 02. Prompting Agéntico](02-prompting-agentico.ipynb)**\n",
-    "\n",
-    "En el siguiente notebook aprenderás:\n",
-    "- **Chain-of-Thought (CoT)**: Cómo hacer que agentes razonen paso a paso\n",
-    "- **Tree-of-Thought (ToT)**: Exploración de múltiples caminos de razonamiento\n",
-    "- **ReAct Pattern**: Implementación completa del patrón Reasoning + Acting\n",
-    "- **Self-Consistency**: Mejorar precisión con múltiples muestreos\n",
-    "- **Few-shot Prompting**: Aprendizaje desde ejemplos\n",
-    "\n",
-    "Estas técnicas son CRÍTICAS para construir agentes efectivos en producción.\n"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "### 📊 Tu Progreso\n",
-    "\n",
-    "Marca lo que has completado:\n",
-    "\n",
-    "**Conceptos Fundamentales**:\n",
-    "- [ ] Entiendo la diferencia entre LLM y Agente\n",
-    "- [ ] Puedo explicar el agent loop\n",
-    "- [ ] Conozco los componentes principales (cerebro, memoria, tools, loop)\n",
-    "\n",
-    "**Implementación**:\n",
-    "- [ ] He implementado un agente básico desde cero\n",
-    "- [ ] Completé los 5 ejercicios GRADED (≥70 pts)\n",
-    "- [ ] Probé LangChain u otro framework\n",
-    "\n",
-    "**Conocimiento Teórico**:\n",
-    "- [ ] Leí al menos 3 papers de la lista\n",
-    "- [ ] Entiendo ReAct pattern\n",
-    "- [ ] Conozco tradeoffs de frameworks vs desde cero\n",
-    "\n",
-    "**Best Practices**:\n",
-    "- [ ] Sé cómo manejar errores en agentes\n",
-    "- [ ] Conozco consideraciones de seguridad\n",
-    "- [ ] Entiendo cost optimization strategies\n",
-    "\n",
-    "**Si marcaste ≥10 items**: ¡Excelente! Estás listo para el siguiente notebook.  \n",
-    "**Si marcaste <10 items**: Considera revisar secciones que te faltaron.\n"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "### 🌟 Recursos Adicionales\n",
-    "\n",
-    "**Comunidades**:\n",
-    "- **LangChain Discord**: https://discord.gg/langchain\n",
-    "- **r/LangChain**: https://reddit.com/r/LangChain\n",
-    "- **HuggingFace Discord**: Canal #agents\n",
-    "\n",
-    "**Newsletters**:\n",
-    "- **The Batch** (Andrew Ng): Actualizaciones semanales en AI\n",
-    "- **LangChain Blog**: Nuevas features y tutoriales\n",
-    "\n",
-    "**Cursos**:\n",
-    "- **DeepLearning.AI**: \"LangChain for LLM Application Development\"\n",
-    "- **DeepLearning.AI**: \"Functions, Tools and Agents with LangChain\"\n",
-    "\n",
-    "**GitHub Repos para estudiar**:\n",
-    "- **AutoGPT**: Agente completamente autónomo\n",
-    "- **BabyAGI**: Implementación simple y educativa\n",
-    "- **LangChain examples**: Cientos de ejemplos prácticos\n"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "### 💬 Feedback\n",
-    "\n",
-    "¿Cómo fue tu experiencia con este notebook?\n",
-    "\n",
-    "- ¿Qué secciones fueron más útiles?\n",
-    "- ¿Qué temas necesitan más profundidad?\n",
-    "- ¿Los ejercicios fueron del nivel adecuado?\n",
-    "- ¿Qué agregarías?\n",
-    "\n",
-    "Tu feedback ayuda a mejorar estos materiales. Gracias por aprender con nosotros!\n"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "---\n",
-    "\n",
-    "<div align=\"center\">\n",
-    "\n",
-    "## 🎓 ¡Has Completado la Introducción a LLM Agents!\n",
-    "\n",
-    "### Respuesta a la Pregunta Guía\n",
-    "\n",
-    "*¿Cómo transformamos un LLM pasivo en un agente activo?*\n",
-    "\n",
-    "**Respuesta**: Envolvemos el LLM en un **control loop** que:\n",
-    "1. 🧠 Construye prompts con contexto sobre herramientas disponibles\n",
-    "2. 📝 Parsea respuestas del LLM para identificar acciones\n",
-    "3. 🔧 Ejecuta acciones en el entorno (usando herramientas)\n",
-    "4. 👀 Retroalimenta observaciones al LLM\n",
-    "5. 🔄 Itera hasta completar la tarea\n",
-    "\n",
-    "La \"agenticidad\" emerge de este loop, no del LLM en sí.\n",
-    "\n",
-    "### Continúa tu viaje\n",
-    "\n",
-    "**[➡️ Siguiente: 02. Prompting Agéntico](02-prompting-agentico.ipynb)**\n",
-    "\n",
-    "---\n",
-    "\n",
-    "*Built with ❤️ for AI learners everywhere*\n",
-    "\n",
-    "</div>\n"
-   ]
-  }
- ],
- "metadata": {
-  "kernelspec": {
-   "display_name": "Python 3",
-   "language": "python",
-   "name": "python3"
-  },
-  "language_info": {
-   "codemirror_mode": {
-    "name": "ipython",
-    "version": 3
-   },
-   "file_extension": ".py",
-   "mimetype": "text/x-python",
-   "name": "python",
-   "nbconvert_exporter": "python",
-   "pygments_lexer": "ipython3",
-   "version": "3.8.0"
-  }
- },
- "nbformat": 4,
- "nbformat_minor": 4
+]))
+
+print("Sección 6: Frameworks... OK")
+
+# Construcción completa - escribir JSON
+notebook = {
+    "cells": cells,
+    "metadata": {
+        "kernelspec": {
+            "display_name": "Python 3",
+            "language": "python",
+            "name": "python3"
+        },
+        "language_info": {
+            "codemirror_mode": {
+                "name": "ipython",
+                "version": 3
+            },
+            "file_extension": ".py",
+            "mimetype": "text/x-python",
+            "name": "python",
+            "nbconvert_exporter": "python",
+            "pygments_lexer": "ipython3",
+            "version": "3.8.0"
+        }
+    },
+    "nbformat": 4,
+    "nbformat_minor": 4
 }
+
+# Guardar (parcialmente - continuaremos en siguiente script)
+output_path = "/home/user/TUTORIALS-AI-AGENTS/rutas/03-llm-agents/01-intro-llm-agents-PARTIAL.json"
+with open(output_path, 'w', encoding='utf-8') as f:
+    json.dump(notebook, f, ensure_ascii=False, indent=1)
+
+print(f"\n✅ Notebook parcial guardado en: {output_path}")
+print(f"📊 Total de celdas hasta ahora: {len(cells)}")
+print("\nContinuaremos con secciones 7-10 en el siguiente script...")
